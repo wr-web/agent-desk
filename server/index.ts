@@ -140,12 +140,16 @@ const server = app.listen(port, "127.0.0.1", () => {
 
 const webSockets = new WebSocketServer({ server, path: "/ws" });
 webSockets.on("connection", async (socket, request) => {
-  const url = new URL(request.url || "", `http://${request.headers.host}`);
-  const deckId = url.searchParams.get("deck");
-  const paneId = url.searchParams.get("pane");
-  if (!deckId || !paneId) return socket.close(1008, "Missing deck or pane");
-  const deck = await getDeck(deckId);
-  const pane = deck?.terminals[paneId];
-  if (!deck || !pane) return socket.close(1008, "Unknown deck or pane");
-  attachClient(deckId, pane, socket);
+  try {
+    const url = new URL(request.url || "", `http://${request.headers.host}`);
+    const deckId = url.searchParams.get("deck");
+    const paneId = url.searchParams.get("pane");
+    if (!deckId || !paneId) return socket.close(1008, "Missing deck or pane");
+    const deck = await getDeck(deckId);
+    const pane = deck?.terminals[paneId];
+    if (!deck || !pane) return socket.close(1008, "Unknown deck or pane");
+    attachClient(deckId, pane, socket);
+  } catch {
+    if (socket.readyState === socket.OPEN) socket.close(1011, "Internal error");
+  }
 });

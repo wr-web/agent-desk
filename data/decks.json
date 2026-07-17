@@ -1,0 +1,72 @@
+[
+  {
+    "id": "f7a49a81-badc-4c5c-8671-15835653f87c",
+    "name": "hello-world",
+    "createdAt": "2026-07-17T12:58:01.021Z",
+    "updatedAt": "2026-07-17T12:58:50.884Z",
+    "layout": {
+      "type": "split",
+      "id": "0a27051b-ac33-4c60-a77b-ce97b5eb2c04",
+      "direction": "vertical",
+      "ratio": 0.48328488372093026,
+      "first": {
+        "type": "split",
+        "id": "0e9ebb0b-e024-43bd-bc20-129653200db7",
+        "direction": "horizontal",
+        "ratio": 0.5,
+        "first": {
+          "type": "pane",
+          "id": "91f14cbf-4a47-475a-a524-782c0cbf54a2"
+        },
+        "second": {
+          "type": "pane",
+          "id": "433c0e2a-44a1-4c75-8171-a9a100312e8e"
+        }
+      },
+      "second": {
+        "type": "split",
+        "id": "8fdb0c21-d75b-4192-97f1-250ce44ca8df",
+        "direction": "horizontal",
+        "ratio": 0.5137614678899083,
+        "first": {
+          "type": "pane",
+          "id": "13fd9414-cc80-48c4-a0da-895e7cba00fa"
+        },
+        "second": {
+          "type": "pane",
+          "id": "945fab59-84d6-4179-adb7-cf6df2c46407"
+        }
+      }
+    },
+    "terminals": {
+      "91f14cbf-4a47-475a-a524-782c0cbf54a2": {
+        "id": "91f14cbf-4a47-475a-a524-782c0cbf54a2",
+        "title": "Shell 1",
+        "cwd": "/Users/rt",
+        "command": "opencode",
+        "resumeCommand": "opencode"
+      },
+      "433c0e2a-44a1-4c75-8171-a9a100312e8e": {
+        "id": "433c0e2a-44a1-4c75-8171-a9a100312e8e",
+        "title": "Shell 3",
+        "cwd": "/Users/rt",
+        "command": "opencode",
+        "resumeCommand": "opencode"
+      },
+      "13fd9414-cc80-48c4-a0da-895e7cba00fa": {
+        "id": "13fd9414-cc80-48c4-a0da-895e7cba00fa",
+        "title": "Shell 2",
+        "cwd": "/Users/rt/Documents",
+        "command": "opencode",
+        "resumeCommand": "opencode"
+      },
+      "945fab59-84d6-4179-adb7-cf6df2c46407": {
+        "id": "945fab59-84d6-4179-adb7-cf6df2c46407",
+        "title": "Shell 4",
+        "cwd": "/Users/rt/Documents",
+        "command": "zsh",
+        "resumeCommand": ""
+      }
+    }
+  }
+]

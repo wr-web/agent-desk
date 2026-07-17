@@ -143,10 +143,15 @@ export function ensureSession(deckId: string, pane: TerminalSnapshot) {
     launchResume();
   });
   terminal.onExit(({ exitCode }) => {
+    if (sessions.get(key) !== session) return;
     for (const client of session.clients) {
-      if (client.readyState === client.OPEN) client.send(JSON.stringify({ type: "exit", exitCode }));
+      if (client.readyState === client.OPEN) {
+        client.send(JSON.stringify({ type: "exit", exitCode }));
+        client.close(1000, "Process exited");
+      }
     }
-    if (sessions.get(key) === session) sessions.delete(key);
+    session.clients.clear();
+    sessions.delete(key);
   });
   sessions.set(key, session);
   return session;
@@ -216,15 +221,27 @@ export async function listOpenCodeSessions(cwd: string) {
   return JSON.parse(stdout) as Array<{ id: string; title: string; timeUpdated: number }>;
 }
 
+function closeSessionClients(session: Session) {
+  for (const client of session.clients) {
+    if (client.readyState === client.OPEN) client.close(1000, "Session ended");
+  }
+  session.clients.clear();
+}
+
 export function killSession(deckId: string, paneId: string) {
   const key = keyFor(deckId, paneId);
-  sessions.get(key)?.pty.kill();
+  const session = sessions.get(key);
+  if (session) {
+    closeSessionClients(session);
+    session.pty.kill();
+  }
   sessions.delete(key);
 }
 
 export function killDeck(deckId: string) {
   for (const [key, session] of sessions) {
     if (key.startsWith(`${deckId}:`)) {
+      closeSessionClients(session);
       session.pty.kill();
       sessions.delete(key);
     }
