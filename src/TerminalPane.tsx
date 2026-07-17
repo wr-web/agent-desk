@@ -137,11 +137,13 @@ export function TerminalPane({ deckId, terminal, active, staged, splitCount, onS
     const t = termRef.current;
     if (!s || s.readyState !== WebSocket.OPEN || !f || !t) return;
     f.fit();
-    if (t.cols !== lastCols.current || t.rows !== lastRows.current) {
+    const changed = t.cols !== lastCols.current || t.rows !== lastRows.current;
+    if (changed) {
       lastCols.current = t.cols;
       lastRows.current = t.rows;
       s.send(JSON.stringify({ type: "resize", cols: t.cols, rows: t.rows }));
     }
+    s.send(JSON.stringify({ type: "redraw" }));
   }, []);
 
   useEffect(() => {

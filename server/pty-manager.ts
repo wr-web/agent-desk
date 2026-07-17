@@ -172,6 +172,7 @@ export function attachClient(deckId: string, pane: TerminalSnapshot, socket: Web
     try {
       const message = JSON.parse(raw.toString()) as { type: string; data?: string; cols?: number; rows?: number };
       if (message.type === "input" && typeof message.data === "string") session.pty.write(message.data);
+      if (message.type === "redraw") session.pty.write("\x0c");
       if (message.type === "resize" && message.cols && message.rows) {
         session.cols = message.cols;
         session.rows = message.rows;

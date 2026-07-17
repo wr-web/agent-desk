@@ -104,5 +104,75 @@
         "resumeCommand": ""
       }
     }
+  },
+  {
+    "id": "e5db0876-d91d-4e54-97da-8f0adcc842f6",
+    "name": "233",
+    "createdAt": "2026-07-17T13:35:54.244Z",
+    "updatedAt": "2026-07-17T13:36:03.174Z",
+    "layout": {
+      "type": "split",
+      "id": "868d7f9f-49d6-49fe-933c-27c76a16e2b2",
+      "direction": "vertical",
+      "ratio": 0.43968023255813954,
+      "first": {
+        "type": "split",
+        "id": "5f46350e-1ccc-4d30-ad24-960fb6560dfe",
+        "direction": "vertical",
+        "ratio": 0.5648690970739346,
+        "first": {
+          "type": "split",
+          "id": "d2458c32-05a8-42bc-9875-ad4fc946b90b",
+          "direction": "vertical",
+          "ratio": 0.5039718173654762,
+          "first": {
+            "type": "pane",
+            "id": "f99e4ea0-032f-43e1-8f92-ddaa9bc5127f"
+          },
+          "second": {
+            "type": "pane",
+            "id": "d51528fc-eb3e-4a26-91b6-29ffd41ad000"
+          }
+        },
+        "second": {
+          "type": "pane",
+          "id": "db3dced3-e4d9-41df-a4c5-08a15cdebf67"
+        }
+      },
+      "second": {
+        "type": "pane",
+        "id": "b8dd0112-1b3d-4ae5-9a63-d301fb029298"
+      }
+    },
+    "terminals": {
+      "f99e4ea0-032f-43e1-8f92-ddaa9bc5127f": {
+        "id": "f99e4ea0-032f-43e1-8f92-ddaa9bc5127f",
+        "title": "Shell 1",
+        "cwd": "/Users/rt",
+        "command": "",
+        "resumeCommand": ""
+      },
+      "d51528fc-eb3e-4a26-91b6-29ffd41ad000": {
+        "id": "d51528fc-eb3e-4a26-91b6-29ffd41ad000",
+        "title": "Shell 4",
+        "cwd": "/Users/rt",
+        "command": "",
+        "resumeCommand": ""
+      },
+      "db3dced3-e4d9-41df-a4c5-08a15cdebf67": {
+        "id": "db3dced3-e4d9-41df-a4c5-08a15cdebf67",
+        "title": "Shell 3",
+        "cwd": "/Users/rt",
+        "command": "",
+        "resumeCommand": ""
+      },
+      "b8dd0112-1b3d-4ae5-9a63-d301fb029298": {
+        "id": "b8dd0112-1b3d-4ae5-9a63-d301fb029298",
+        "title": "Shell 2",
+        "cwd": "/Users/rt",
+        "command": "",
+        "resumeCommand": ""
+      }
+    }
   }
 ]
