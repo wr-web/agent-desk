@@ -56,15 +56,22 @@ async function descendants(rootPid: number) {
       .map((line) => line.trim().match(/^(\d+)\s+(\d+)\s+(.+)$/))
       .filter((match): match is RegExpMatchArray => Boolean(match))
       .map((match) => ({ pid: Number(match[1]), ppid: Number(match[2]), command: match[3] }));
-    const chain = [] as typeof rows;
-    let parent = rootPid;
-    while (true) {
-      const child = rows.find((row) => row.ppid === parent);
-      if (!child) break;
-      chain.push(child);
-      parent = child.pid;
+    const children = new Map<number, typeof rows>();
+    for (const row of rows) {
+      const siblings = children.get(row.ppid) || [];
+      siblings.push(row);
+      children.set(row.ppid, siblings);
     }
-    return chain;
+    const result: typeof rows = [];
+    const queue = [rootPid];
+    while (queue.length > 0) {
+      const pid = queue.shift()!;
+      for (const kid of children.get(pid) || []) {
+        result.push(kid);
+        queue.push(kid.pid);
+      }
+    }
+    return result;
   } catch {
     return [];
   }
@@ -194,15 +201,28 @@ export function attachClient(deckId: string, pane: TerminalSnapshot, socket: Web
 export async function snapshotSession(deckId: string, pane: TerminalSnapshot): Promise<TerminalSnapshot> {
   const session = sessions.get(keyFor(deckId, pane.id));
   if (!session) return pane;
-  const chain = await descendants(session.pty.pid);
-  const foreground = chain.find((process) => isAgent(process.command)) || chain.at(-1);
+  const all = await descendants(session.pty.pid);
+  const foreground = all.find((process) => isAgent(process.command)) || all.at(-1);
   const cwd = await cwdFor(foreground?.pid || session.pty.pid, pane.cwd || os.homedir());
   const command = foreground?.command || "";
   const currentOpenCodeSession = opencodeSessionId(command);
   const savedOpenCodeSession = opencodeSessionId(pane.resumeCommand);
-  const resumeCommand = isAgent(command) && /(^|\/)opencode(?:\.exe)?(?:\s|$)/.test(command) && (currentOpenCodeSession || savedOpenCodeSession)
-    ? `opencode --session ${shellEscape(currentOpenCodeSession || savedOpenCodeSession)}`
-    : resumeFor(command);
+  let resumeCommand = "";
+  if (isAgent(command) && /(^|\/)opencode(?:\.exe)?(?:\s|$)/.test(command) && (currentOpenCodeSession || savedOpenCodeSession)) {
+    resumeCommand = `opencode --session ${shellEscape(currentOpenCodeSession || savedOpenCodeSession)}`;
+  } else {
+    resumeCommand = resumeFor(command);
+  }
+  if (!resumeCommand) {
+    try {
+      const sessions = await listOpenCodeSessions(cwd);
+      if (sessions.length > 0) {
+        resumeCommand = `opencode --session ${shellEscape(sessions[0].id)}`;
+      }
+    } catch {
+      // OpenCode CLI may not be installed or available.
+    }
+  }
   return {
     ...pane,
     cwd,
