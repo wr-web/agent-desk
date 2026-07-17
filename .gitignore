@@ -1,6 +1,7 @@
 node_modules/
 dist/
 data/desks.json
+data/sessions.db
 *.log
 *.tsbuildinfo
 coverage/

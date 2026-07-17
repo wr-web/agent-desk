@@ -5,6 +5,7 @@ import { promisify } from "node:util";
 import * as pty from "node-pty";
 import type WebSocket from "ws";
 import type { TerminalSnapshot } from "./types.js";
+import { savePaneSession, getPaneSession, deletePaneSession, deleteDeckSessions } from "./session-store.js";
 
 const execFileAsync = promisify(execFile);
 
@@ -87,14 +88,37 @@ async function cwdFor(pid: number, fallback: string) {
   }
 }
 
-export function ensureSession(deckId: string, pane: TerminalSnapshot) {
+function dbResume(agent: string, sessionId: string): string {
+  if (agent === "opencode") return sessionId ? `opencode --session ${shellEscape(sessionId)}` : "opencode";
+  if (agent === "claude") return "claude --continue";
+  if (agent === "codex") return "codex resume --last";
+  if (agent === "deepseek-tui") return "deepseek-tui";
+  if (agent === "hermes") return "hermes";
+  return "";
+}
+
+export async function ensureSession(deckId: string, pane: TerminalSnapshot) {
   const key = keyFor(deckId, pane.id);
   const existing = sessions.get(key);
   if (existing) return existing;
 
   const shell = process.env.SHELL || "/bin/zsh";
   const cwd = pane.cwd && existsSync(pane.cwd) ? pane.cwd : os.homedir();
-  const savedResume = pane.resumeCommand === pane.command ? resumeFor(pane.command) : pane.resumeCommand;
+  let savedResume = pane.resumeCommand === pane.command ? resumeFor(pane.command) : pane.resumeCommand;
+  if (!savedResume) {
+    const db = getPaneSession(deckId, pane.id);
+    if (db) {
+      savedResume = dbResume(db.agent, db.sessionId);
+      if (db.agent === "opencode" && !db.sessionId) {
+        try {
+          const sessions = await listOpenCodeSessions(db.cwd);
+          if (sessions.length > 0) savedResume = `opencode --session ${shellEscape(sessions[0].id)}`;
+        } catch {
+          savedResume = "opencode";
+        }
+      }
+    }
+  }
   const resumeScript = `IFS= read -r AGENT_DESK_COMMAND; eval "$AGENT_DESK_COMMAND"; exec ${shellEscape(shell)} -l`;
   const terminal = pty.spawn(shell, savedResume ? ["-l", "-c", resumeScript] : ["-l"], {
     name: "xterm-256color",
@@ -164,8 +188,8 @@ export function ensureSession(deckId: string, pane: TerminalSnapshot) {
   return session;
 }
 
-export function attachClient(deckId: string, pane: TerminalSnapshot, socket: WebSocket) {
-  const session = ensureSession(deckId, pane);
+export async function attachClient(deckId: string, pane: TerminalSnapshot, socket: WebSocket) {
+  const session = await ensureSession(deckId, pane);
   session.clients.add(socket);
   session.launchResume();
   if (session.alternateScreen) {
@@ -198,6 +222,15 @@ export function attachClient(deckId: string, pane: TerminalSnapshot, socket: Web
   socket.on("close", () => session.clients.delete(socket));
 }
 
+function agentName(command: string): string {
+  if (/(^|\/)opencode(?:\.exe)?(?:\s|$)/.test(command)) return "opencode";
+  if (/(^|\/)claude(?:\.exe)?(?:\s|$)/.test(command)) return "claude";
+  if (/(^|\/)codex(?:\.exe)?(?:\s|$)/.test(command)) return "codex";
+  if (/(^|\/)deepseek-tui(?:\.exe)?(?:\s|$)/.test(command)) return "deepseek-tui";
+  if (/(^|\/)hermes(?:\.exe)?(?:\s|$)/.test(command)) return "hermes";
+  return "";
+}
+
 export async function snapshotSession(deckId: string, pane: TerminalSnapshot): Promise<TerminalSnapshot> {
   const session = sessions.get(keyFor(deckId, pane.id));
   if (!session) return pane;
@@ -208,19 +241,25 @@ export async function snapshotSession(deckId: string, pane: TerminalSnapshot): P
   const currentOpenCodeSession = opencodeSessionId(command);
   const savedOpenCodeSession = opencodeSessionId(pane.resumeCommand);
   let resumeCommand = "";
+  const agent = agentName(command);
+  if (agent) {
+    const sessionId = opencodeSessionId(command);
+    savePaneSession(deckId, pane.id, agent, sessionId, cwd, command);
+  }
   if (isAgent(command) && /(^|\/)opencode(?:\.exe)?(?:\s|$)/.test(command) && (currentOpenCodeSession || savedOpenCodeSession)) {
     resumeCommand = `opencode --session ${shellEscape(currentOpenCodeSession || savedOpenCodeSession)}`;
   } else {
     resumeCommand = resumeFor(command);
   }
-  if (!resumeCommand) {
+  if (!resumeCommand && agent === "opencode") {
     try {
       const sessions = await listOpenCodeSessions(cwd);
       if (sessions.length > 0) {
         resumeCommand = `opencode --session ${shellEscape(sessions[0].id)}`;
+        savePaneSession(deckId, pane.id, "opencode", sessions[0].id, cwd, command);
       }
     } catch {
-      // OpenCode CLI may not be installed or available.
+      // OpenCode CLI may not be installed.
     }
   }
   return {
@@ -249,6 +288,8 @@ function closeSessionClients(session: Session) {
   session.clients.clear();
 }
 
+export { deleteDeckSessions };
+
 export function killSession(deckId: string, paneId: string) {
   const key = keyFor(deckId, paneId);
   const session = sessions.get(key);
@@ -257,6 +298,7 @@ export function killSession(deckId: string, paneId: string) {
     session.pty.kill();
   }
   sessions.delete(key);
+  deletePaneSession(deckId, paneId);
 }
 
 export function killDeck(deckId: string) {
@@ -267,4 +309,5 @@ export function killDeck(deckId: string) {
       sessions.delete(key);
     }
   }
+  deleteDeckSessions(deckId);
 }
