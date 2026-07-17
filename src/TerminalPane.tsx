@@ -154,6 +154,10 @@ export function TerminalPane({ deckId, terminal, active, staged, splitCount, onS
     if (active) termRef.current?.focus();
   }, [active]);
 
+  useEffect(() => {
+    termRef.current?.refresh(0, termRef.current.rows - 1);
+  });
+
   return (
     <section className={`terminal-pane ${active ? "is-active" : ""}`} onMouseDown={onSelect}>
       <header className="terminal-header">

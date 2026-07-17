@@ -34,5 +34,75 @@
         "resumeCommand": ""
       }
     }
+  },
+  {
+    "id": "b0e11e21-bf42-4bb7-ace8-720a028938f1",
+    "name": "hh",
+    "createdAt": "2026-07-17T13:32:35.500Z",
+    "updatedAt": "2026-07-17T13:34:19.794Z",
+    "layout": {
+      "type": "split",
+      "id": "c95ffd5a-5d21-46b8-9bc5-8cc315cf2b6c",
+      "direction": "vertical",
+      "ratio": 0.4231269304142442,
+      "first": {
+        "type": "split",
+        "id": "a050f028-7d65-49b5-a2ec-522509b63010",
+        "direction": "horizontal",
+        "ratio": 0.4801223241590214,
+        "first": {
+          "type": "pane",
+          "id": "1b153669-e2ea-419a-9d50-dd67509aee50"
+        },
+        "second": {
+          "type": "pane",
+          "id": "fb4b5cf8-081d-43a1-818f-20839692aa74"
+        }
+      },
+      "second": {
+        "type": "split",
+        "id": "680c28a7-79b3-4231-8be9-16460daa0f08",
+        "direction": "horizontal",
+        "ratio": 0.5061162079510704,
+        "first": {
+          "type": "pane",
+          "id": "9c6e159e-63f8-40dd-b13c-64deae5b0693"
+        },
+        "second": {
+          "type": "pane",
+          "id": "af6d5711-2675-445c-952c-b83294dd9f9f"
+        }
+      }
+    },
+    "terminals": {
+      "1b153669-e2ea-419a-9d50-dd67509aee50": {
+        "id": "1b153669-e2ea-419a-9d50-dd67509aee50",
+        "title": "Shell 1",
+        "cwd": "/Users/rt",
+        "command": "",
+        "resumeCommand": ""
+      },
+      "fb4b5cf8-081d-43a1-818f-20839692aa74": {
+        "id": "fb4b5cf8-081d-43a1-818f-20839692aa74",
+        "title": "Shell 4",
+        "cwd": "/Users/rt/Documents",
+        "command": "opencode",
+        "resumeCommand": "opencode"
+      },
+      "9c6e159e-63f8-40dd-b13c-64deae5b0693": {
+        "id": "9c6e159e-63f8-40dd-b13c-64deae5b0693",
+        "title": "Shell 2",
+        "cwd": "/Users/rt",
+        "command": "bash",
+        "resumeCommand": ""
+      },
+      "af6d5711-2675-445c-952c-b83294dd9f9f": {
+        "id": "af6d5711-2675-445c-952c-b83294dd9f9f",
+        "title": "Shell 3",
+        "cwd": "/Users/rt",
+        "command": "zsh",
+        "resumeCommand": ""
+      }
+    }
   }
 ]
