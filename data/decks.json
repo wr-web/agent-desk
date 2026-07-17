@@ -3,7 +3,7 @@
     "id": "f7a49a81-badc-4c5c-8671-15835653f87c",
     "name": "hello-world",
     "createdAt": "2026-07-17T12:58:01.021Z",
-    "updatedAt": "2026-07-17T12:58:50.884Z",
+    "updatedAt": "2026-07-17T13:23:39.990Z",
     "layout": {
       "type": "split",
       "id": "0a27051b-ac33-4c60-a77b-ce97b5eb2c04",
@@ -43,8 +43,8 @@
         "id": "91f14cbf-4a47-475a-a524-782c0cbf54a2",
         "title": "Shell 1",
         "cwd": "/Users/rt",
-        "command": "opencode",
-        "resumeCommand": "opencode"
+        "command": "",
+        "resumeCommand": ""
       },
       "433c0e2a-44a1-4c75-8171-a9a100312e8e": {
         "id": "433c0e2a-44a1-4c75-8171-a9a100312e8e",
@@ -64,7 +64,77 @@
         "id": "945fab59-84d6-4179-adb7-cf6df2c46407",
         "title": "Shell 4",
         "cwd": "/Users/rt/Documents",
-        "command": "zsh",
+        "command": "",
+        "resumeCommand": ""
+      }
+    }
+  },
+  {
+    "id": "0aa92927-de26-4204-b3f1-e898c889662c",
+    "name": "hello-world2123",
+    "createdAt": "2026-07-17T13:23:52.465Z",
+    "updatedAt": "2026-07-17T13:24:01.390Z",
+    "layout": {
+      "type": "split",
+      "id": "437a0dd4-c126-418f-97c6-53f1baeae5fa",
+      "direction": "vertical",
+      "ratio": 0.46002906976744184,
+      "first": {
+        "type": "split",
+        "id": "44bd2e8c-dd95-48fd-9a9d-f6c10dec1bd9",
+        "direction": "horizontal",
+        "ratio": 0.4801223241590214,
+        "first": {
+          "type": "pane",
+          "id": "124024a8-5795-48b2-8107-180a56e79df4"
+        },
+        "second": {
+          "type": "pane",
+          "id": "85b0daaa-3a87-4932-a0a1-d8ce13ce0edf"
+        }
+      },
+      "second": {
+        "type": "split",
+        "id": "d07ea7ea-3797-4796-87b2-9d693d0a729d",
+        "direction": "horizontal",
+        "ratio": 0.463302752293578,
+        "first": {
+          "type": "pane",
+          "id": "0f4d0dd0-572d-48bf-9985-041fcb70c8b8"
+        },
+        "second": {
+          "type": "pane",
+          "id": "251427e0-554a-48f4-ad55-377f75609574"
+        }
+      }
+    },
+    "terminals": {
+      "124024a8-5795-48b2-8107-180a56e79df4": {
+        "id": "124024a8-5795-48b2-8107-180a56e79df4",
+        "title": "Shell 1",
+        "cwd": "/Users/rt",
+        "command": "",
+        "resumeCommand": ""
+      },
+      "85b0daaa-3a87-4932-a0a1-d8ce13ce0edf": {
+        "id": "85b0daaa-3a87-4932-a0a1-d8ce13ce0edf",
+        "title": "Shell 3",
+        "cwd": "/Users/rt",
+        "command": "",
+        "resumeCommand": ""
+      },
+      "0f4d0dd0-572d-48bf-9985-041fcb70c8b8": {
+        "id": "0f4d0dd0-572d-48bf-9985-041fcb70c8b8",
+        "title": "Shell 2",
+        "cwd": "/Users/rt",
+        "command": "",
+        "resumeCommand": ""
+      },
+      "251427e0-554a-48f4-ad55-377f75609574": {
+        "id": "251427e0-554a-48f4-ad55-377f75609574",
+        "title": "Shell 4",
+        "cwd": "/Users/rt",
+        "command": "",
         "resumeCommand": ""
       }
     }

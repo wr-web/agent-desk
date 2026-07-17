@@ -120,26 +120,20 @@ export function TerminalPane({ deckId, terminal, active, staged, splitCount, onS
     };
   }, [deckId, staged, terminal.id]);
 
-  const resizeJiggle = useCallback(() => {
+  const doResize = useCallback(() => {
     const s = socketRef.current;
     const f = fitRef.current;
     const t = termRef.current;
     if (!s || s.readyState !== WebSocket.OPEN || !f || !t) return;
     f.fit();
-    s.send(JSON.stringify({ type: "resize", cols: Math.max(2, t.cols - 1), rows: t.rows }));
-    setTimeout(() => {
-      if (s.readyState === WebSocket.OPEN) {
-        f?.fit();
-        s.send(JSON.stringify({ type: "resize", cols: t.cols, rows: t.rows }));
-      }
-    }, 100);
+    s.send(JSON.stringify({ type: "resize", cols: t.cols, rows: t.rows }));
   }, []);
 
   useEffect(() => {
     if (!staged && splitCount > 0) {
-      setTimeout(() => resizeJiggle(), 50);
+      setTimeout(() => doResize(), 50);
     }
-  }, [splitCount, staged, resizeJiggle]);
+  }, [splitCount, staged, doResize]);
 
   useEffect(() => {
     if (active) termRef.current?.focus();
