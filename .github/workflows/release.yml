@@ -3,6 +3,9 @@ on:
   push:
     tags: ["v*"]
 
+permissions:
+  contents: write
+
 jobs:
   build:
     strategy:
@@ -100,6 +103,8 @@ jobs:
           fi
 
       - name: Upload release asset
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: softprops/action-gh-release@v2
         with:
           files: agent-deck-*
